@@ -2,15 +2,17 @@ import sys
 
 import pygame
 
+import physics
+
 pygame.init()
 
 tilesize = 64
 
 world_data = [
-    [1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 0, 1, 1, 1, 0, 0, 1, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
-    [1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+    [0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
+    [0, 0, 0, 1, 1, 1, 0, 0, 1, 1],
+    [0, 0, 1, 0, 1, 0, 1, 0, 1, 1],
+    [0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
 ]
 
 world = []
@@ -23,10 +25,9 @@ for row in range(len(world_data)):
             tile = pygame.Rect(col * tilesize, row * tilesize, tilesize, tilesize)
             world.append(tile)
 
-
 clocks = pygame.time.Clock()
 size = width, height = 1600, 1000
-speed = 1
+speed = 0.5
 black = 0, 0, 0
 pos = [0.0, 0.0]
 
@@ -37,8 +38,8 @@ keydownRight = False
 
 screen = pygame.display.set_mode(size)
 
-ball = pygame.image.load("Screenshot 2021-05-03 185911.png")
-ballrect = ball.get_rect()
+ball = pygame.image.load("64x64.png")
+playerrect = ball.get_rect()
 
 while 1:
     delta = clocks.tick()
@@ -64,17 +65,30 @@ while 1:
 
     if pos[0] < 0:
         pos[0] = 0
-    if pos[0] + ballrect.width > width:
-        pos[0] = width - ballrect.width
+    if pos[0] + playerrect.width > width:
+        pos[0] = width - playerrect.width
     if pos[1] < 0:
         pos[1] = 0
-    if pos[1] + ballrect.height > height:
-        pos[1] = height - ballrect.height
+    if pos[1] + playerrect.height > height:
+        pos[1] = height - playerrect.height
 
-    ballrect.update(pos, ballrect.size)
+    playerrect.update(pos, playerrect.size)
+
+    for tile in world:
+        if physics.has_collision(playerrect, tile):
+            if keydownLeft:
+                pos[0] = tile.left + tile.width
+            if keydownRight:
+                pos[0] = tile.left - playerrect.width
+            if keydownUp:
+                pos[1] = tile.bottom
+            if keydownDown:
+                pos[1] = tile.top - playerrect.height
+
+    playerrect.update(pos, playerrect.size)
 
     screen.fill(black)
-    screen.blit(ball, ballrect)
+    screen.blit(ball, playerrect)
     for tile in world:
         pygame.draw.rect(screen, (255, 255, 255), tile)
     pygame.display.flip()
