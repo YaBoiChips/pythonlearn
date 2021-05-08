@@ -9,10 +9,21 @@ pygame.init()
 tilesize = 64
 
 world_data = [
-    [0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
-    [0, 0, 0, 1, 1, 1, 0, 0, 1, 1],
-    [0, 0, 1, 0, 1, 0, 1, 0, 1, 1],
-    [0, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+    [1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
 world = []
@@ -26,7 +37,7 @@ for row in range(len(world_data)):
             world.append(tile)
 
 clocks = pygame.time.Clock()
-size = width, height = 1600, 1000
+size = width, height = 1920, 960
 speed = 0.5
 black = 0, 0, 0
 pos = [0.0, 0.0]
@@ -54,6 +65,7 @@ while 1:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_d: keydownRight = True
         if event.type == pygame.KEYUP and event.key == pygame.K_d: keydownRight = False
 
+    old_pos = pos.copy()
     if keydownDown:
         pos[1] = pos[1] + speed * delta
     if keydownUp:
@@ -76,14 +88,7 @@ while 1:
 
     for tile in world:
         if physics.has_collision(playerrect, tile):
-            if keydownLeft:
-                pos[0] = tile.left + tile.width
-            if keydownRight:
-                pos[0] = tile.left - playerrect.width
-            if keydownUp:
-                pos[1] = tile.bottom
-            if keydownDown:
-                pos[1] = tile.top - playerrect.height
+            pos = old_pos
 
     playerrect.update(pos, playerrect.size)
 
