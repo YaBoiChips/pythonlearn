@@ -17,14 +17,19 @@ class Player:
         y_overlap = False
         for tile in world:
             if tile.get_id() == map.tile_type["ground"]:
-                y_overlap = (self._rect.bottom == tile.get_rect().top) or y_overlap
+                y_overlap = (self._rect.bottom ==
+                             tile.get_rect().top) or y_overlap
         return y_overlap
 
     def get_rect(self):
         return self._rect
 
-    def update(self, world, player_input):
-        pass
+    def update(self, delta, world, player_input):
+        self._pos.x = self._pos.x + player_input.x * self.speed
+        self._rect.update(self._pos, self._rect.size)
 
-    def move(self, v_input):
-        pass
+    def draw(self, screen):
+        screen.blit(self._image, self._rect)
+
+    # def move(self, v_input):
+    #     pass
