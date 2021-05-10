@@ -25,7 +25,7 @@ class Player:
         return self._rect
 
     def update(self, delta, world, player_input):
-        self._pos.x = self._pos.x + player_input.x * self.speed
+        self._pos.x = self._pos.x + player_input.x * self.speed * delta
         self._rect.update(self._pos, self._rect.size)
 
     def draw(self, screen):

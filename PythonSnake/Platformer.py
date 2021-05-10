@@ -43,26 +43,41 @@ can_jump = False
 screen = pygame.display.set_mode(size)
 
 player = p.Player()
-v_input = pygame.Vector2()
 
 
-def get_playerinput(event):
+v_input = pygame.math.Vector2()
+def get_input():
     for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_w: v_input.y = v_input.y + 1
-        if event.type == pygame.KEYUP and event.key == pygame.K_w: v_input.y = v_input.y - 1
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_a: v_input.x = v_input.x - 1
-        if event.type == pygame.KEYUP and event.key == pygame.K_a: v_input.x = v_input.x + 1
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_s: v_input.y = v_input.y - 1
-        if event.type == pygame.KEYUP and event.key == pygame.K_s: v_input.y = v_input.y + 1
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_d: v_input.x = v_input.x + 1
-        if event.type == pygame.KEYUP and event.key == pygame.K_d: v_input.x = v_input.x - 1
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_w:
+            v_input.y = v_input.y + 1
+        elif event.type == pygame.KEYUP and event.key == pygame.K_w:
+            v_input.y = v_input.y - 1
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_a:
+            v_input.x = v_input.x - 1
+        elif event.type == pygame.KEYUP and event.key == pygame.K_a:
+            v_input.x = v_input.x + 1
+
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            v_input.y = v_input.y - 1
+        elif event.type == pygame.KEYUP and event.key == pygame.K_s:
+            v_input.y = v_input.y + 1
+            
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_d:
+            v_input.x = v_input.x + 1
+        elif event.type == pygame.KEYUP and event.key == pygame.K_d:
+            v_input.x = v_input.x - 1
         
     return v_input
 
 
 while 1:
     delta = clocks.tick()
+
+    v_input = get_input()
     player.update(delta, world, v_input)
 
     # if pos[0] < 0:
