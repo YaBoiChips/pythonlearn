@@ -15,30 +15,36 @@ class PhysicsObject:
     velocity = Vector2(0, 0)
     position = Vector2(0, 0)
     
-    bounce = 0.6
+    bounce = 0.0
 
     def __init__(self, parent):
         self._parent = parent
 
     def update(self, delta, world):
+        # print("Fore %s" % self.force)
+        # print("Velocity %s" % self.velocity)
+        # print("Position %s" % self.position)
+
         # acceleration = force / mass
-        self.velocity = self.velocity + self.force / self.mass
+        self.velocity = self.velocity + self.force / self.mass * delta
         self.position = self.position + self.velocity * delta
+
+        # reseting forces every frame
         self.force = Vector2(0, 0)
 
         # check collisions
         for tile in world:
             if has_collision(self._parent.get_rect(), tile.get_rect()):
                 # TODO: emit events
-                if tile.get_id() == map.tile_type["ground"]:
+                if tile.get_type() == "ground":
                     # rewind position to edge of object
                     self.position.y = tile.get_rect().top - self._parent.get_rect().height
                     if self.velocity.magnitude_squared() > self._epsilon:
                         self.add_force(Vector2(0, -1) * self.bounce * self.mass * self.velocity.y)
                     self.velocity.y = 0
-                elif tile.get_id() == map.tile_type["kill"]:
+                elif tile.get_type() == "kill":
                     # reset position
                     print("player died")
 
     def add_force(self, force):
-        self.force = self.force + force
+        self.force = self.force + force * self.mass
